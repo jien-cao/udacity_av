@@ -15,8 +15,6 @@ The goals / steps of this project are the following:
 
 ### 1. Describe your pipeline. As part of the description, explain how you modified the draw_lines() function.
 
-My pipeline consisted of 5 steps. First, I converted the images to grayscale, then I .... 
-
 1) convert the image to grayscale
 
    [note-1] my intuition was to also apply a filter here to pick out 'white' and 'yellow' colors when i saw the sample images all have white/yellow lanes.  after a few tests, i found that a threshold of >200 in grayscale roughly captures to white & yellow.  i tried applying this as a filter (cv2.inRange, then cv2.bitwise_and), and it seemed to work.  however, i later realized that the cv2.canny step actually implies the same, i.e. a strong edge can only be formed when there are pixels with high grayscale values (max_possible_gradient = max_pixel_grayscale - 0).  in the end, i stayed with a simple bgr->grayscale conversion
