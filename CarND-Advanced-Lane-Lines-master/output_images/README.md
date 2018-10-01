@@ -14,5 +14,5 @@
 
 03 "warped activated lanepixels...png":
 ---
- a binary mask is generate based on element-wise OR of (a) s-channel intensity threshold, (b) l-channel gradient intensity and angle threshold; output are generated from test1 & test2.jpg;
+ a binary mask is generate based on element-wise OR of (a) s-channel intensity threshold, (b) l-channel gradient intensity and angle threshold; output are generated from test2 & test3.jpg;
 ![activatedLanePixels](03_warped_activated_lanepixels.png)
