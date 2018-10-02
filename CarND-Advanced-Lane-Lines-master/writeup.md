@@ -27,47 +27,48 @@ The goals / steps of this project are the following:
 [video3]: ./out_harder_challenge_video.mp4 "Video: harder challenge, not good at all, placeholder for future improvement"
 
 
-## IPython notebook is [notebook]: ./project2.ipynb "project 2"
+## IPython notebook is [project2 notebook](./project2.ipynb)
 
 ## Pipeline is implemented by the following modules:
 --
-1. Camera Calibration: *class Camera*
+### 1. Camera Calibration: *class Camera*
 
 The code for this step is contained in the 1st code cell of the IPython notebook located in [notebook]: ./project2.ipynb "project 2". 
 
 Camera class contains the intrinsic properties of a particular camera, it is initialized using a folder of chessboard images taken by the same camera.  The calibration is trivially done using the API introduced in class, using: [chessboard image set]: ./camera_cal/ "camera cal images". 
 
-A "test image" is created by applying the calibration parameters to one of the chessboard images.
-[image1]: ./output_images/01_rawCamera_chessboard_undistorted.png "camera calibration derived from full set, applied to one of the chessboard images"
+A "test image" is created by applying the calibration parameters to one of the chessboard images: [undistort](./output_images/01_rawCamera_chessboard_undistorted.png)
+
 --
-2. Perspective Transforms: *class MountingPerspective*
+### 2. Perspective Transforms: *class MountingPerspective*
 
 The code for this step is contained in the 2nd code cell of the IPython notebook located in [notebook]: ./project2.ipynb "project 2". 
 
 MountingPerspective class is separate from Camera class, as I see it as dependent on how the camera is mounted on the car.
 
-This as an offline calibration step and provided an offline class method to plot the straight_lines image.  The calibration parameters are just pixel locations read out by the user, when moving cursor on the image.  The implementation is the same as introduced in class, but with actual pixel numbers read out from the two lanes in [notebook]: ./project2.ipynb "project 2". 
+This as an offline calibration step and provided an offline class method to plot the straight_lines image.  The calibration parameters are just pixel locations read out by the user, when moving cursor on the image.  The implementation is the same as introduced in class, but with actual pixel numbers read out from the two lanes in [straight lines image](./test_images/straight_lines1.jpg). 
 
 I see this as an offline step and implement the code as if the cal parameters are saved and ready to be loaded when initialized.
 
-[image2]: ./output_images/02_mountedCamera_straightlines_undistorted_and_perspective.png "perspective calibration derived from straight road, applied to both images"
+I used the two test images as a test: [perspective correction](./output_images/02_mountedCamera_straightlines_undistorted_and_perspective.png)
+
 --
-3. Binary image: *class LaneActivator*
+### 3. Binary image: *class LaneActivator*
 
 The code for this step is contained in the 3rd code cell of the IPython notebook located in [notebook]: ./project2.ipynb "project 2". 
 
 LaneActivator class includes image processing steps tailored to the properties of lanes.
 
-Gradient is done in L-channel of the image after converting to HSL, mimicing what's introduced in class, with some experimentation of threshold values;  I ended up applying thresholds to both (dx **2 + dy ** 2) ** 0.5 and the angle arctan, thinking that even with perspective transforms some lanes will still be at an angle to Y-axis.
+Gradient is done in L-channel of the image after converting to HSL, mimicing what's introduced in class, with some experimentation of threshold values;  I ended up applying thresholds to both (dx ** 2 + dy ** 2) ** 0.5 and the angle arctan, thinking that even with perspective transforms some lanes will still be at an angle to Y-axis.
 
 Intensity threshold is applied to S-channel, following the intuition provided in class.
 
 I added a color enhancing method *highlightLane*, after experimenting with challenge video.  My approach is based on the fact that lanes are either yellow or white, so I can use cv2.inRange() to pick up such colors and artificially suppress the light level of the *rest* of the image.  I implemented this step in HSV space because I am more familiar with that particular channel defition.
 
-I used two test images in ./test_images/ for testing.
-[image3]: ./output_images/03_warped_activated_lanepixels.png "activating pixels to get binary mask"
+I used two test images in ./test_images/ for testing: [test images activated](./output_images/03_warped_activated_lanepixels.png)
+
 --
-4. A lane of two lines: *class Line*, *class Lane*
+### 4. A lane of two lines: *class Line*, *class Lane*
 
 The code for this step is contained in the 4-5th code cell of the IPython notebook located in [notebook]: ./project2.ipynb "project 2". 
 
@@ -81,9 +82,8 @@ Each line keeps a history of its previous state, and updates if a confirmation i
 
 For simplicity, I did not keep all history pixel points, instead I keep a counter of past frames (max at 10, i.e. ~ 0.3 sec for a 30FPS camera) and use that as a weight factor to update *Line*'s status, putting a higher emphasis on previous knowledge.
 
-The rest of the implementation is rather trivial.
 --
-5. Commanding everything: *class Car*
+### 5. Commanding everything: *class Car*
 
 This is the top level class.  All components in previous steps are created as members of this Car class.
 
@@ -93,12 +93,19 @@ The *Car* initializes *Camera*, sets up *MountingPerspective* transforms, create
 ## Working on the videos using the pipleline:
 
 A *Car* is created, and its method *processImage* is passed as a handle to:
+
 clip = VideoFileClip("project_video.mp4")
+
 out_clip = clip.fl_image(my_car.processImage)
+--
+"Video: project, showing reasonable performance"
+[video1: project](./out_project_video.mp4) 
 
-[video1]: ./out_project_video.mp4 "Video: project, showing reasonable performance"
-[video2]: ./out_challenge_video.mp4 "Video: challenge, showing somewhat questionable performance"
+--
+"Video: challenge, showing somewhat questionable performance"
+[video2: challenge](./out_challenge_video.mp4 )
 
+--
 I could not get any reasonble result for the "harder challenge" video, in fact, mid-way through the video I lost lanes completely, even with a buffer with history.
 
 ---
