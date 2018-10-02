@@ -95,14 +95,14 @@ The *Car* initializes *Camera*, sets up *MountingPerspective* transforms, create
 A *Car* is created, and its method *processImage* is passed as a handle to:
 
 clip = VideoFileClip("project_video.mp4")
-
 out_clip = clip.fl_image(my_car.processImage)
+
 --
-"Video: project, showing reasonable performance"
+### 1. "Video: project, showing reasonable performance"
 [video1: project](./out_project_video.mp4) 
 
 --
-"Video: challenge, showing somewhat questionable performance"
+### 2. "Video: challenge, showing somewhat questionable performance"
 [video2: challenge](./out_challenge_video.mp4 )
 
 --
